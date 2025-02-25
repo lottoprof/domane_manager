@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Management</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/auth.js"></script>
+    <script src="../js/access.js"></script>
+    <script>
+        if (!localStorage.getItem('access_token')) {
+            window.location.href = '../index.html';
+        }
+    </script>
+</head>
+<body style="visibility: hidden">
+    <div id="header-placeholder"></div>
+
+    <main class="main-content">
+        <h1>Управление API</h1>
+
+        <div class="apk-page">
+            <!-- CDN Accounts Table -->
+            <div class="apk-table-container">
+                <h2>CDN Аккаунты</h2>
+                <table class="apk-data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Бренд</th>
+                            <th>Провайдер</th>
+                            <th>API URL</th>
+                            <th>API Key</th>
+                            <th>Email</th>
+                            <th>Создано</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cdnAccountsTable"></tbody>
+                </table>
+                <button id="addCdnAccountBtn" class="apk-add-btn">+</button>
+            </div>
+
+            <!-- Registrars Table -->
+            <div class="apk-table-container">
+                <h2>Регистраторы</h2>
+                <table class="apk-data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Имя</th>
+                            <th>API URL</th>
+                            <th>API Key</th>
+                            <th>Email</th>
+                            <th>Создано</th>
+                            <th>Активен</th>
+                        </tr>
+                    </thead>
+                    <tbody id="registrarsTable"></tbody>
+                </table>
+                <button id="addRegistrarBtn" class="apk-add-btn">+</button>
+            </div>
+        </div>
+    </main>
+
+<!-- Modal for CDN Account -->
+<div id="cdnAccountModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('cdnAccountModal')">&times;</span>
+        <h2>Добавить CDN Аккаунт</h2>
+        <form id="cdnAccountForm">
+            <label>Brand ID:</label>
+            <select id="brandId" required>
+                <option value="">Выберите бренд</option>
+                <!-- Опции брендов будут загружаться из API -->
+            </select>
+
+            <label>Провайдер:</label>
+            <input type="text" id="providerName" required>
+
+            <label>API URL:</label>
+            <input type="url" id="apiUrl">
+
+            <label>API Key:</label>
+            <input type="text" id="apiKey" required>
+
+            <label>Email:</label>
+            <input type="email" id="email">
+
+            <button type="submit">Добавить</button>
+        </form>
+    </div>
+</div>
+
+
+    <!-- Modal for Registrar -->
+    <div id="registrarModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('registrarModal')">&times;</span>
+            <h2>Добавить Регистратора</h2>
+            <form id="registrarForm">
+                <label>Название:</label>
+                <input type="text" id="registrarName" required>
+
+                <label>API URL:</label>
+                <input type="url" id="registrarApiUrl">
+
+                <label>API Key:</label>
+                <input type="text" id="registrarApiKey">
+
+                <label>Email:</label>
+                <input type="email" id="registrarEmail">
+
+                <button type="submit">Добавить</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Подключение скриптов -->
+    <script src="../js/header.js"></script>
+    <script src="../js/apk.js"></script>
+</body>
+</html>
+

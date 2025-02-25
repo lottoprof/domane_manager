@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Domain Manager - Sites</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/auth.js"></script>
+  <script src="../js/access.js"></script>
+  <script>
+      // Немедленная проверка токена
+      if (!localStorage.getItem('access_token')) {
+          window.location.href = '../index.html';
+      }
+  </script>
+</head>
+<body style="visibility: hidden">
+  <div id="header-placeholder"></div>
+  <main class="main-content">
+      <div class="container">
+          <div class="controls">
+              <button class="btn btn-primary" id="newSite">New Site</button>
+              <div class="table-controls">
+                  <div class="entries-control">
+                      Show <select id="entriesCount">
+                          <option>10</option>
+                          <option>25</option>
+                          <option>50</option>
+                          <option>100</option>
+                      </select> entries
+                  </div>
+                  <div class="search-control">
+                      <input type="text" id="searchInput" placeholder="Search...">
+                  </div>
+              </div>
+          </div>
+          <div class="table-container">
+              <table class="data-table">
+                  <thead>
+                      <tr>
+                          <th>ID</th>
+                          <th>Brand</th>
+                          <th>Label</th>
+                          <th>Logo</th>
+                          <th>Name</th>
+                          <th>Domains in Use</th>
+                          <th>Domain Reserve</th>
+                          <th>Created</th>
+                          <th>Actions</th>
+                      </tr>
+                  </thead>
+                  <tbody id="sitesTableBody">
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </main>
+  <script src="../js/header.js"></script>
+  <script src="../js/sites.js"></script>
+  <script>
+      // Проверка авторизации и показ контента
+      document.addEventListener('DOMContentLoaded', async () => {
+          try {
+              const isAuth = await Auth.checkAuth();
+              if (!isAuth) {
+                  window.location.href = '../index.html';
+                  return;
+              }
+              // Показываем контент только после проверки авторизации
+              document.body.style.visibility = 'visible';
+          } catch {
+              window.location.href = '../index.html';
+          }
+      });
+  </script>
+</body>
+</html>

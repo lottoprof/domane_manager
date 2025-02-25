@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Management</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/auth.js"></script>
+    <script src="../js/access.js"></script>
+    <script>
+        if (!localStorage.getItem('access_token')) {
+            window.location.href = '../index.html';
+        }
+    </script>
+</head>
+<body style="visibility: hidden">
+    <div id="header-placeholder"></div>
+
+    <main class="main-content">
+        <div class="container">
+            <h1>Project Management</h1>
+
+            <!-- Таблица проектов -->
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>RS %</th>
+                            <th>Ref Link</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Created At</th>
+                            <th>Created By</th>
+                            <th>Active</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="brandsTableBody">
+                        <!-- Данные загружаются динамически -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Кнопка добавления проекта -->
+    <button id="addBrandBtn" class="add-btn">+</button>
+
+    <!-- Модальное окно добавления/редактирования проекта -->
+    <div id="brandModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Добавить проект</h2>
+            <label>Name:</label>
+            <input type="text" id="brandName" required>
+            
+            <label>Description:</label>
+            <input type="text" id="brandDescription">
+            
+            <label>RS %:</label>
+            <input type="number" id="brandRsPercentage" step="0.01">
+            
+            <label>Ref Link:</label>
+            <input type="text" id="brandRefLink">
+            
+            <label>Start Date:</label>
+            <input type="date" id="brandStartDate">
+            
+            <label>End Date:</label>
+            <input type="date" id="brandEndDate">
+            
+            <label>Active:</label>
+            <select id="brandActive">
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+            </select>
+            
+            <button id="saveBrandBtn">Сохранить</button>
+            <button onclick="closeModal()">Отмена</button>
+        </div>
+    </div>
+
+    <!-- Модальное окно удаления -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h2>Удалить проект?</h2>
+            <p>Вы уверены, что хотите удалить этот проект?</p>
+            <button id="confirmDelete">OK</button>
+            <button onclick="closeDeleteModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script src="../js/header.js"></script>
+    <script src="../js/brands.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const isAuth = await Auth.checkAuth();
+                if (!isAuth) {
+                    window.location.href = '../index.html';
+                    return;
+                }
+                document.body.style.visibility = 'visible';
+            } catch {
+                window.location.href = '../index.html';
+            }
+        });
+    </script>
+
+    <script>
+        function closeModal() {
+            document.getElementById("brandModal").style.display = "none";
+        }
+        function closeDeleteModal() {
+            document.getElementById("deleteModal").style.display = "none";
+        }
+    </script>
+</body>
+</html>
+

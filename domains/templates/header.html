@@ -1,0 +1,40 @@
+
+<header class="main-header">
+    <div class="header-content">
+        <!-- Логотип -->
+        <div class="header-logo">
+            <a href="../templates/dashboard.html">DM</a>
+        </div>
+        <!-- Правая часть -->
+        <div class="header-right">
+            <!-- Кнопка бургер-меню -->
+            <button id="burger-btn" class="burger-btn">☰</button>
+            <!-- Селектор языка -->
+            <select id="language-select" class="language-select">
+                <!-- Языки добавляются динамически -->
+            </select>
+        </div>
+    </div>
+</header>
+
+<!-- Боковое меню -->
+<div id="sidebar" class="sidebar">
+    <div class="sidebar-content">
+        <div class="sidebar-header">
+            <h2>Menu</h2>
+            <div class="user-info">
+                <span id="userName"></span>
+                <span id="userRole"></span>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <!-- Меню добавляется динамически через header.js -->
+        </nav>
+        <div class="sidebar-footer">
+            <button onclick="Auth.logout()" class="logout-btn">Logout</button>
+        </div>
+    </div>
+</div>
+
+<!-- Затемнение -->
+<div id="sidebar-overlay" class="sidebar-overlay"></div>

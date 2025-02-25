@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain Manager - Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/auth.js"></script>
+    <script src="../js/access.js"></script>
+    <script>
+        // Немедленная проверка токена
+        if (!localStorage.getItem('access_token')) {
+            window.location.href = '../index.html';
+        }
+    </script>
+</head>
+<body style="visibility: hidden">
+    <div id="header-placeholder"></div>
+    <div class="dashboard-content">
+        <div class="stats-banner">
+            <div class="stats-wrapper">
+                <div class="stat-card">
+                    <div class="stat-title">Total Domains</div>
+                    <div class="stat-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Active Domains</div>
+                    <div class="stat-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Total Views</div>
+                    <div class="stat-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Total Clicks</div>
+                    <div class="stat-value">0</div>
+                </div>
+            </div>
+        </div>
+        <div class="charts-section">
+            <div class="chart-block">
+                <div class="chart-header">
+                    <h2>Clicks and Views</h2>
+                    <div class="chart-legend">
+                        <span class="legend-item">
+                            <span class="legend-color views"></span>
+                            Views
+                        </span>
+                        <span class="legend-item">
+                            <span class="legend-color clicks"></span>
+                            Clicks
+                        </span>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="clicksViewsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/header.js"></script>
+    <script src="../js/charts.js"></script>
+    <script>
+        // Проверка авторизации и показ контента
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const isAuth = await Auth.checkAuth();
+                if (!isAuth) {
+                    window.location.href = '../index.html';
+                    return;
+                }
+                // Показываем контент только после проверки авторизации
+                document.body.style.visibility = 'visible';
+            } catch {
+                window.location.href = '../index.html';
+            }
+        });
+    </script>
+</body>
+</html>

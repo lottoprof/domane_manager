@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Templates Management</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/auth.js"></script>
+    <script src="../js/access.js"></script>
+    <script>
+        if (!localStorage.getItem('access_token')) {
+            window.location.href = '../index.html';
+        }
+    </script>
+</head>
+<body style="visibility: hidden">
+    <div id="header-placeholder"></div>
+
+    <main class="main-content">
+        <div class="container">
+            <h1>Templates Management</h1>
+
+            <!-- Таблица шаблонов -->
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Brand</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Language</th>
+                            <th>Created At</th>
+                            <th>Active</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="templatesTableBody">
+                        <!-- Данные загружаются динамически -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Кнопка добавления шаблона -->
+    <button id="addTemplateBtn" class="add-btn">+</button>
+
+    <!-- Модальное окно добавления/редактирования шаблона -->
+    <div id="templateModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Добавить шаблон</h2>
+
+            <label>Brand:</label>
+            <select id="templateBrand"></select>
+
+            <label>Name:</label>
+            <input type="text" id="templateName" required>
+            
+            <label>Description:</label>
+            <input type="text" id="templateDescription">
+            
+            <label>Language:</label>
+            <input type="text" id="templateLanguage" required>
+
+            <label>Active:</label>
+            <select id="templateActive">
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+            </select>
+            
+            <button id="saveTemplateBtn">Сохранить</button>
+            <button onclick="closeModal()">Отмена</button>
+        </div>
+    </div>
+
+    <script src="../js/header.js"></script>
+    <script src="../js/templates.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const isAuth = await Auth.checkAuth();
+                if (!isAuth) {
+                    window.location.href = '../index.html';
+                    return;
+                }
+                document.body.style.visibility = 'visible';
+            } catch {
+                window.location.href = '../index.html';
+            }
+        });
+
+        function closeModal() {
+            document.getElementById("templateModal").style.display = "none";
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,34 @@
+# FastAPI для создания API
+
+# FastAPI для создания API
+fastapi==0.115.6
+
+# Uvicorn для запуска FastAPI приложения
+uvicorn[standard]==0.25.0
+
+# SQLAlchemy для работы с БД
+SQLAlchemy==2.0.37
+
+# psycopg2 для подключения к PostgreSQL (синхронно)
+psycopg2-binary==2.9.10
+
+# Pydantic для валидации данных
+pydantic==2.10.5
+
+# python-dotenv для работы с .env файлами
+python-dotenv==1.0.1
+
+# asyncpg для асинхронной работы с PostgreSQL
+asyncpg==0.29.0
+
+# Токенизация и безопасность
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]==3.3.0
+
+# Логирование
+loguru==0.7.2
+
+# FastAPI CRUD Router для автоматизации создания CRUD
+fastapi-crudrouter==0.8.6
+
+
