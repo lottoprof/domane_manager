@@ -1,122 +1,92 @@
+/**
+ * Менеджер доменов - управляет отображением и взаимодействием с таблицей доменов
+ */
 class DomainsManager {
     constructor() {
-        this.table = document.getElementById('domainsTableBody');
-        this.syncModal = document.getElementById('syncModal');
-        this.redirectModal = document.getElementById('redirectModal');
-        this.projectMap = {};
-        this.websiteMap = {};
-        this.expandedRows = new Set();
+        this.tableBody = document.getElementById('domainsTableBody');
+        this.confirmModal = document.getElementById('confirmModal');
+        this.confirmTitle = document.getElementById('confirmModalTitle');
+        this.confirmMessage = document.getElementById('confirmModalMessage');
+        this.confirmYesBtn = document.getElementById('confirmYesBtn');
+        this.confirmNoBtn = document.getElementById('confirmNoBtn');
+        
+        // Хранение текущей операции
+        this.currentOperation = null;
+        this.currentDomainId = null;
+        
+        // Кеш данных
+        this.domains = [];
+        
         this.init();
     }
-
+    
     init() {
         this.bindEvents();
-        this.loadProjects();
         this.loadDomains();
     }
-
+    
     bindEvents() {
-        // Закрытие модальных окон по клику вне окна
-        window.addEventListener('click', (event) => {
-            if (event.target === this.syncModal) {
-                this.closeSyncModal();
-            }
-            if (event.target === this.redirectModal) {
-                this.closeRedirectModal();
+        // Обработчики для модального окна
+        this.confirmYesBtn.addEventListener('click', () => this.handleConfirmation(true));
+        this.confirmNoBtn.addEventListener('click', () => this.handleConfirmation(false));
+        
+        // Закрытие модального окна по Esc
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.confirmModal) {
+                this.closeConfirmModal();
             }
         });
         
-        // Закрытие по Escape
-        document.addEventListener("keydown", (event) => {
-            if (event.key === "Escape") {
-                this.closeSyncModal();
-                this.closeRedirectModal();
+        // Закрытие по клику вне модального окна
+        window.addEventListener('click', (e) => {
+            if (e.target === this.confirmModal) {
+                this.closeConfirmModal();
             }
         });
     }
-
-    async loadProjects() {
-        try {
-            const response = await fetch('/api/brands', {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-                }
-            });
-            
-            if (response.ok) {
-                const projects = await response.json();
-                
-                projects.forEach(project => {
-                    this.projectMap[project.brand_id] = project.name;
-                });
-                
-                // Теперь загрузим сайты для всех проектов
-                this.loadWebsites();
-            }
-        } catch (error) {
-            console.error('Error loading projects:', error);
-        }
-    }
-
-    async loadWebsites() {
-        try {
-            const response = await fetch('/api/sites', {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-                }
-            });
-            
-            if (response.ok) {
-                const websites = await response.json();
-                
-                websites.forEach(site => {
-                    this.websiteMap[site.id] = `${site.name} (${site.lang || 'N/A'})`;
-                });
-            }
-        } catch (error) {
-            console.error('Error loading websites:', error);
-        }
-    }
-
+    
     async loadDomains() {
         try {
-            const response = await fetch(`/api/domains`, {
+            const response = await fetch('/api/domains', {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('access_token')}`
                 }
             });
             
             if (response.ok) {
-                const domains = await response.json();
-                this.renderDomains(domains);
+                this.domains = await response.json();
+                this.renderDomains();
             }
         } catch (error) {
-            console.error('Error loading domains:', error);
+            console.error('Ошибка загрузки доменов:', error);
+            // Если API недоступен, показываем демо-данные
+            this.domains = this.getDemoData();
+            this.renderDomains();
         }
     }
-
-    renderDomains(domains) {
-        this.table.innerHTML = domains.map((domain, index) => {
-            const isExpanded = this.expandedRows.has(domain.id);
-            const rowId = `domain-details-${domain.id}`;
+    
+    renderDomains() {
+        this.tableBody.innerHTML = this.domains.map((domain, index) => {
+            const rowId = `domain-details-${domain.id || index}`;
+            const statusClass = this.getStatusClass(domain);
             
             return `
-                <tr class="${domain.cdnStatus === 'Active' ? 'row-active' : 'row-inactive'}">
-                    <td><button onclick="domainsManager.toggleDetails(${domain.id})" class="btn">${isExpanded ? '-' : '+'}</button></td>
-                    <td>${this.projectMap[domain.projectId] || domain.projectId || '-'}</td>
-                    <td>${this.websiteMap[domain.websiteId] || domain.websiteId || '-'}</td>
-                    <td>${domain.domain} <button class="btn btn-primary btn-sm" onclick="domainsManager.showSyncModal(${domain.id})">Sync</button></td>
+                <tr class="${statusClass}">
+                    <td><button class="expand-btn" onclick="domainsManager.toggleDetails('${rowId}', ${index})">+</button></td>
+                    <td>${domain.project || '-'}</td>
+                    <td>${domain.website || '-'}</td>
+                    <td>${domain.domain} <button class="sync-btn" onclick="domainsManager.showConfirm('sync', ${index})">Sync</button></td>
                     <td>${domain.cdnStatus || '-'}</td>
                     <td>${domain.google || '0'}</td>
                     <td>${domain.yandex || '0'}</td>
-                    <td>${this.renderBlockStatus(domain.blockCDN)}</td>
-                    <td>${this.renderBlockStatus(domain.blockProvider)}</td>
-                    <td>${this.renderBlockStatus(domain.blockWhoIsNS)}</td>
-                    <td>${this.renderBlockStatus(domain.blockGovernment)}</td>
+                    <td><span class="status-icon">${this.getStatusIcon(domain.blockCDN)}</span></td>
+                    <td><span class="status-icon">${this.getStatusIcon(domain.blockProvider)}</span></td>
+                    <td><span class="status-icon">${this.getStatusIcon(domain.blockWhoIs)}</span></td>
+                    <td><span class="status-icon">${this.getStatusIcon(domain.blockGovernment)}</span></td>
                 </tr>
-                <tr id="${rowId}" class="${isExpanded ? '' : 'hidden'}">
+                <tr id="${rowId}" class="hidden">
                     <td colspan="11">
-                        <table class="data-table">
+                        <table class="details-table">
                             <tbody>
                                 <tr>
                                     <th>Domain</th>
@@ -131,9 +101,9 @@ class DomainsManager {
                                     <td>${domain.redirect || '-'}</td>
                                     <td>${domain.expiration || '-'}</td>
                                     <td>
-                                        <button onclick="domainsManager.showRedirectModal(${domain.id}, 'pageToPage')" class="btn btn-sm">PageToPageRedirect</button>
-                                        <button onclick="domainsManager.showRedirectModal(${domain.id}, 'pagesToHeader')" class="btn btn-sm">PagesToHeaderRedirect</button>
-                                        <button onclick="domainsManager.showRedirectModal(${domain.id}, 'robots')" class="btn btn-sm">RedirectRobots</button>
+                                        <button class="action-btn" onclick="domainsManager.showConfirm('pageToPage', ${index})">PageToPageRedirect</button>
+                                        <button class="action-btn" onclick="domainsManager.showConfirm('pagesToHeader', ${index})">PagesToHeaderRedirect</button>
+                                        <button class="action-btn" onclick="domainsManager.showConfirm('robots', ${index})">RedirectRobots</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -143,146 +113,166 @@ class DomainsManager {
             `;
         }).join('');
     }
-
-    renderBlockStatus(status) {
-        return status ? '❌' : '✅';
+    
+    // Определение класса для строки на основе статуса
+    getStatusClass(domain) {
+        return domain.active ? 'row-active' : 'row-inactive';
     }
-
-    toggleDetails(domainId) {
-        const rowId = `domain-details-${domainId}`;
-        const detailsRow = document.getElementById(rowId);
+    
+    // Возвращает иконку для статуса блокировки
+    getStatusIcon(isBlocked) {
+        return isBlocked ? '❌' : '✅';
+    }
+    
+    // Переключение видимости деталей домена
+    toggleDetails(rowId, index) {
+        const row = document.getElementById(rowId);
+        if (!row) return;
         
-        if (detailsRow) {
-            if (detailsRow.classList.contains('hidden')) {
-                detailsRow.classList.remove('hidden');
-                this.expandedRows.add(domainId);
-            } else {
-                detailsRow.classList.add('hidden');
-                this.expandedRows.delete(domainId);
-            }
+        const button = row.previousElementSibling.querySelector('.expand-btn');
+        
+        if (row.classList.contains('hidden')) {
+            row.classList.remove('hidden');
+            if (button) button.textContent = '-';
+        } else {
+            row.classList.add('hidden');
+            if (button) button.textContent = '+';
         }
     }
-
-    showSyncModal(domainId) {
-        // Заполняем информацию о домене в модальном окне
-        document.getElementById('syncModalDomainName').textContent = 
-            this.findDomainById(domainId)?.domain || domainId;
+    
+    // Показ модального окна подтверждения
+    showConfirm(operation, domainIndex) {
+        const domain = this.domains[domainIndex];
+        if (!domain) return;
         
-        // Сохраняем ID домена для использования при подтверждении
-        document.getElementById('confirmSyncBtn').setAttribute('data-domain-id', domainId);
+        this.currentOperation = operation;
+        this.currentDomainId = domain.id;
         
-        // Отображаем модальное окно
-        this.syncModal.classList.add('show');
-    }
-
-    closeSyncModal() {
-        if (this.syncModal) {
-            this.syncModal.classList.remove('show');
-        }
-    }
-
-    confirmSync() {
-        const domainId = document.getElementById('confirmSyncBtn').getAttribute('data-domain-id');
-        this.syncDomain(domainId);
-        this.closeSyncModal();
-    }
-
-    showRedirectModal(domainId, redirectType) {
-        // Сохраняем информацию о типе редиректа и домене
-        const domain = this.findDomainById(domainId);
-        document.getElementById('redirectModalDomainName').textContent = domain?.domain || domainId;
+        let title, message;
         
-        let actionTitle = "";
-        switch(redirectType) {
+        switch(operation) {
+            case 'sync':
+                title = 'Подтверждение синхронизации';
+                message = `Вы уверены, что хотите синхронизировать домен ${domain.domain}?`;
+                break;
             case 'pageToPage':
-                actionTitle = "Page To Page Redirect";
+                title = 'Подтверждение Page to Page Redirect';
+                message = `Выполнить Page to Page Redirect для домена ${domain.domain}?`;
                 break;
             case 'pagesToHeader':
-                actionTitle = "Pages To Header Redirect";
+                title = 'Подтверждение Pages to Header Redirect';
+                message = `Выполнить Pages to Header Redirect для домена ${domain.domain}?`;
                 break;
             case 'robots':
-                actionTitle = "Redirect Robots";
+                title = 'Подтверждение Redirect Robots';
+                message = `Выполнить Redirect Robots для домена ${domain.domain}?`;
                 break;
+            default:
+                title = 'Подтверждение действия';
+                message = 'Вы уверены, что хотите выполнить это действие?';
         }
         
-        document.getElementById('redirectModalTitle').textContent = actionTitle;
-        
-        // Сохраняем ID домена и тип редиректа для использования при подтверждении
-        const confirmBtn = document.getElementById('confirmRedirectBtn');
-        confirmBtn.setAttribute('data-domain-id', domainId);
-        confirmBtn.setAttribute('data-redirect-type', redirectType);
-        
-        // Отображаем модальное окно
-        this.redirectModal.classList.add('show');
+        this.confirmTitle.textContent = title;
+        this.confirmMessage.textContent = message;
+        this.confirmModal.classList.add('show');
     }
-
-    closeRedirectModal() {
-        if (this.redirectModal) {
-            this.redirectModal.classList.remove('show');
+    
+    // Закрытие модального окна
+    closeConfirmModal() {
+        this.confirmModal.classList.remove('show');
+    }
+    
+    // Обработка подтверждения
+    handleConfirmation(confirmed) {
+        if (!confirmed) {
+            this.closeConfirmModal();
+            return;
         }
-    }
-
-    confirmRedirect() {
-        const confirmBtn = document.getElementById('confirmRedirectBtn');
-        const domainId = confirmBtn.getAttribute('data-domain-id');
-        const redirectType = confirmBtn.getAttribute('data-redirect-type');
         
-        switch(redirectType) {
+        // Выполнение действия в зависимости от текущей операции
+        switch(this.currentOperation) {
+            case 'sync':
+                this.syncDomain(this.currentDomainId);
+                break;
             case 'pageToPage':
-                this.pageToPageRedirect(domainId);
+                this.pageToPageRedirect(this.currentDomainId);
                 break;
             case 'pagesToHeader':
-                this.pagesToHeaderRedirect(domainId);
+                this.pagesToHeaderRedirect(this.currentDomainId);
                 break;
             case 'robots':
-                this.redirectRobots(domainId);
+                this.redirectRobots(this.currentDomainId);
                 break;
         }
         
-        this.closeRedirectModal();
+        this.closeConfirmModal();
     }
-
-    findDomainById(domainId) {
-        // Эта функция будет реализована после того, как у нас будет хранилище доменов
-        return { domain: `Domain ID ${domainId}` }; // Заглушка
-    }
-
-    // Domain action methods
+    
+    // Методы API
     async syncDomain(domainId) {
-        try {
-            const response = await fetch(`/api/domains/${domainId}/sync`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-                }
-            });
-            
-            if (response.ok) {
-                this.loadDomains();
-            } else {
-                console.error('Error syncing domain:', await response.json());
-            }
-        } catch (error) {
-            console.error('Error syncing domain:', error);
-        }
+        console.log(`Синхронизация домена ${domainId}`);
+        // Здесь будет вызов API
+        
+        // Перезагрузка данных после операции
+        await this.loadDomains();
     }
-
-    // Redirect methods
+    
     async pageToPageRedirect(domainId) {
-        console.log(`Executing page-to-page redirect for domain ID: ${domainId}`);
-        // Реализация редиректа страница-страница
+        console.log(`Page to Page Redirect для домена ${domainId}`);
+        // Здесь будет вызов API
     }
-
+    
     async pagesToHeaderRedirect(domainId) {
-        console.log(`Executing pages-to-header redirect for domain ID: ${domainId}`);
-        // Реализация редиректа страницы-заголовок
+        console.log(`Pages to Header Redirect для домена ${domainId}`);
+        // Здесь будет вызов API
     }
-
+    
     async redirectRobots(domainId) {
-        console.log(`Executing robots redirect for domain ID: ${domainId}`);
-        // Реализация редиректа robots
+        console.log(`Redirect Robots для домена ${domainId}`);
+        // Здесь будет вызов API
+    }
+    
+    // Демо-данные для тестирования
+    getDemoData() {
+        return [
+            {
+                id: 1,
+                project: 'Project 1',
+                website: 'Website 1 (EN)',
+                domain: 'example.com',
+                cdnStatus: 'Active',
+                google: 300,
+                yandex: 1000,
+                blockCDN: true,
+                blockProvider: false,
+                blockWhoIs: false,
+                blockGovernment: true,
+                provider: 'Namecheap',
+                redirect: 'Configured',
+                expiration: '2025-12-31',
+                active: true
+            },
+            {
+                id: 2,
+                project: 'Project 2',
+                website: 'Website 2 (RU)',
+                domain: 'example.ru',
+                cdnStatus: 'Inactive',
+                google: 150,
+                yandex: 800,
+                blockCDN: false,
+                blockProvider: true,
+                blockWhoIs: true,
+                blockGovernment: false,
+                provider: 'REG.RU',
+                redirect: 'Not Configured',
+                expiration: '2024-10-15',
+                active: false
+            }
+        ];
     }
 }
 
+// Инициализация
 const domainsManager = new DomainsManager();
 

@@ -1,3 +1,4 @@
+<!-- domains.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -8,7 +9,6 @@
    <script src="../js/auth.js"></script>
    <script src="../js/access.js"></script>
    <script>
-       // Немедленная проверка токена
        if (!localStorage.getItem('access_token')) {
            window.location.href = '../index.html';
        }
@@ -30,7 +30,7 @@
                            <th rowspan="2">CDN status</th>
                            <th rowspan="2">Google</th>
                            <th rowspan="2">Yandex</th>
-                           <th colspan="4">Block Details</th>
+                           <th colspan="4" class="text-center">Block Details</th>
                        </tr>
                        <tr>
                            <th>CDN</th>
@@ -47,26 +47,14 @@
        </div>
    </main>
 
-   <!-- Модальное окно для подтверждения синхронизации -->
-   <div id="syncModal" class="modal">
+   <!-- Модальное окно для подтверждения действий -->
+   <div id="confirmModal" class="modal">
        <div class="modal-content">
-           <h2>Подтвердите синхронизацию</h2>
-           <p>Вы уверены, что хотите синхронизировать домен <span id="syncModalDomainName"></span>?</p>
+           <h2 id="confirmModalTitle">Подтверждение</h2>
+           <p id="confirmModalMessage">Вы уверены, что хотите выполнить это действие?</p>
            <div class="form-actions">
-               <button type="button" id="confirmSyncBtn" class="btn btn-primary" onclick="domainsManager.confirmSync()">Подтвердить</button>
-               <button type="button" class="btn" onclick="domainsManager.closeSyncModal()">Отмена</button>
-           </div>
-       </div>
-   </div>
-
-   <!-- Модальное окно для подтверждения редиректа -->
-   <div id="redirectModal" class="modal">
-       <div class="modal-content">
-           <h2 id="redirectModalTitle">Подтвердите действие</h2>
-           <p>Вы уверены, что хотите выполнить это действие для домена <span id="redirectModalDomainName"></span>?</p>
-           <div class="form-actions">
-               <button type="button" id="confirmRedirectBtn" class="btn btn-primary" onclick="domainsManager.confirmRedirect()">Подтвердить</button>
-               <button type="button" class="btn" onclick="domainsManager.closeRedirectModal()">Отмена</button>
+               <button type="button" id="confirmYesBtn" class="btn btn-primary">Да</button>
+               <button type="button" id="confirmNoBtn" class="btn">Нет</button>
            </div>
        </div>
    </div>
@@ -74,7 +62,6 @@
    <script src="../js/header.js"></script>
    <script src="../js/domains.js"></script>
    <script>
-       // Проверка авторизации и показ контента
        document.addEventListener('DOMContentLoaded', async () => {
            try {
                const isAuth = await Auth.checkAuth();
@@ -82,7 +69,6 @@
                    window.location.href = '../index.html';
                    return;
                }
-               // Показываем контент только после проверки авторизации
                document.body.style.visibility = 'visible';
            } catch {
                window.location.href = '../index.html';
