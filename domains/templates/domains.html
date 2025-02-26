@@ -18,9 +18,9 @@
    <div id="header-placeholder"></div>
    <main class="main-content">
        <div class="page-container">
-                          <div class="table-container">
-                <h2>Домены</h2>
-                <table class="data-table">
+           <div class="table-container">
+               <h2>Домены</h2>
+               <table class="data-table">
                    <thead>
                        <tr>
                            <th rowspan="2">Expand</th>
@@ -30,7 +30,7 @@
                            <th rowspan="2">CDN status</th>
                            <th rowspan="2">Google</th>
                            <th rowspan="2">Yandex</th>
-                           <th colspan="5">Block Details</th>
+                           <th colspan="4">Block Details</th>
                        </tr>
                        <tr>
                            <th>CDN</th>
@@ -43,7 +43,6 @@
                        <!-- Данные загружаются динамически -->
                    </tbody>
                </table>
-               <button id="addDomainBtn" class="table-add-btn">+</button>
            </div>
        </div>
    </main>
@@ -90,30 +89,6 @@
            }
        });
    </script>
-
-   <!-- Модальное окно для подтверждения синхронизации -->
-   <div id="syncModal" class="modal">
-       <div class="modal-content">
-           <h2>Подтвердите синхронизацию</h2>
-           <p>Вы уверены, что хотите синхронизировать домен <span id="syncModalDomainName"></span>?</p>
-           <div class="form-actions">
-               <button type="button" id="confirmSyncBtn" class="btn btn-primary" onclick="domainsManager.confirmSync()">Подтвердить</button>
-               <button type="button" class="btn" onclick="domainsManager.closeSyncModal()">Отмена</button>
-           </div>
-       </div>
-   </div>
-
-   <!-- Модальное окно для подтверждения редиректа -->
-   <div id="redirectModal" class="modal">
-       <div class="modal-content">
-           <h2 id="redirectModalTitle">Подтвердите действие</h2>
-           <p>Вы уверены, что хотите выполнить это действие для домена <span id="redirectModalDomainName"></span>?</p>
-           <div class="form-actions">
-               <button type="button" id="confirmRedirectBtn" class="btn btn-primary" onclick="domainsManager.confirmRedirect()">Подтвердить</button>
-               <button type="button" class="btn" onclick="domainsManager.closeRedirectModal()">Отмена</button>
-           </div>
-       </div>
-   </div>
 </body>
 </html>
 
