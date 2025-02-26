@@ -646,7 +646,6 @@ select:focus {
 }
 
 .sync-btn {
-    margin-left: 10px;
     padding: 4px 8px;
     background: #007bff;
     color: white;
@@ -657,7 +656,6 @@ select:focus {
 }
 
 .action-btn {
-    margin-right: 5px;
     padding: 4px 8px;
     background: #f0f0f0;
     border: 1px solid #ccc;
