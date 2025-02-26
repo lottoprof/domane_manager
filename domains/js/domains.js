@@ -43,7 +43,7 @@ class DomainsManager {
                 yandex_index: 2000,
                 block_details: {
                     cdn: false, // ✅
-                    provider: true, // ❌
+                    provider: false, // ✅
                     whois_ns: false, // ✅
                     government: false // ✅
                 },
