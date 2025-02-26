@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -18,13 +17,11 @@
     <div id="header-placeholder"></div>
 
     <main class="main-content">
-        <h1>Управление API</h1>
-
-        <div class="apk-page">
+        <div class="page-container">
             <!-- CDN Accounts Table -->
-            <div class="apk-table-container">
+            <div class="table-container">
                 <h2>CDN Аккаунты</h2>
-                <table class="apk-data-table">
+                <table class="data-table">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -38,13 +35,13 @@
                     </thead>
                     <tbody id="cdnAccountsTable"></tbody>
                 </table>
-                <button id="addCdnAccountBtn" class="apk-add-btn">+</button>
+                <button id="addCdnAccountBtn" class="table-add-btn">+</button>
             </div>
 
             <!-- Registrars Table -->
-            <div class="apk-table-container">
+            <div class="table-container">
                 <h2>Регистраторы</h2>
-                <table class="apk-data-table">
+                <table class="data-table">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -58,40 +55,39 @@
                     </thead>
                     <tbody id="registrarsTable"></tbody>
                 </table>
-                <button id="addRegistrarBtn" class="apk-add-btn">+</button>
+                <button id="addRegistrarBtn" class="table-add-btn">+</button>
             </div>
         </div>
     </main>
 
-<!-- Modal for CDN Account -->
-<div id="cdnAccountModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('cdnAccountModal')">&times;</span>
-        <h2>Добавить CDN Аккаунт</h2>
-        <form id="cdnAccountForm">
-            <label>Brand ID:</label>
-            <select id="brandId" required>
-                <option value="">Выберите бренд</option>
-                <!-- Опции брендов будут загружаться из API -->
-            </select>
+    <!-- Modal for CDN Account -->
+    <div id="cdnAccountModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('cdnAccountModal')">&times;</span>
+            <h2>Добавить CDN Аккаунт</h2>
+            <form id="cdnAccountForm">
+                <label>Brand ID:</label>
+                <select id="brandId" required>
+                    <option value="">Выберите бренд</option>
+                    <!-- Опции брендов будут загружаться из API -->
+                </select>
 
-            <label>Провайдер:</label>
-            <input type="text" id="providerName" required>
+                <label>Провайдер:</label>
+                <input type="text" id="providerName" required>
 
-            <label>API URL:</label>
-            <input type="url" id="apiUrl">
+                <label>API URL:</label>
+                <input type="url" id="apiUrl">
 
-            <label>API Key:</label>
-            <input type="text" id="apiKey" required>
+                <label>API Key:</label>
+                <input type="text" id="apiKey" required>
 
-            <label>Email:</label>
-            <input type="email" id="email">
+                <label>Email:</label>
+                <input type="email" id="email">
 
-            <button type="submit">Добавить</button>
-        </form>
+                <button type="submit">Добавить</button>
+            </form>
+        </div>
     </div>
-</div>
-
 
     <!-- Modal for Registrar -->
     <div id="registrarModal" class="modal">

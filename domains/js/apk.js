@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("Файл apk.js загружен!");
 
@@ -18,8 +17,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("cdnAccountForm").addEventListener("submit", createCdnAccount);
         document.getElementById("registrarForm").addEventListener("submit", createRegistrar);
     } else {
-        document.getElementById("addCdnAccountBtn").style.display = "none";
-        document.getElementById("addRegistrarBtn").style.display = "none";
+        document.getElementById("addCdnAccountBtn").classList.add("hidden");
+        document.getElementById("addRegistrarBtn").classList.add("hidden");
     }
 
     setupModalEventListeners();
@@ -79,7 +78,7 @@ async function loadRegistrars() {
         
         const data = await response.json();
         tableBody.innerHTML = data.map(registrar => `
-            <tr>
+            <tr class="${registrar.active ? 'row-active' : 'row-inactive'}">
                 <td>${registrar.registrar_id}</td>
                 <td>${registrar.name}</td>
                 <td>${registrar.api_url || '-'}</td>
@@ -193,7 +192,6 @@ function openModal(modalId) {
         loadBrands();
     }
 
-    modal.style.display = "flex";
     modal.classList.add("show");
     console.log(`Открываем модальное окно: ${modalId}`);
 }
@@ -202,7 +200,6 @@ function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (!modal) return;
     
-    modal.style.display = "none";
     modal.classList.remove("show");
 
     if (modalId === "cdnAccountModal") {
@@ -213,13 +210,17 @@ function closeModal(modalId) {
 function setupModalEventListeners() {
     document.addEventListener("keydown", (event) => {
         if (event.key === "Escape") {
-            document.querySelectorAll(".modal").forEach(modal => modal.style.display = "none");
+            document.querySelectorAll(".modal").forEach(modal => {
+                modal.classList.remove("show");
+            });
         }
     });
 
     document.addEventListener("click", (event) => {
         document.querySelectorAll(".modal").forEach(modal => {
-            if (event.target === modal) modal.style.display = "none";
+            if (event.target === modal) {
+                modal.classList.remove("show");
+            }
         });
     });
 }

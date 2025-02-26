@@ -112,13 +112,13 @@ class HeaderManager {
     openSidebar() {
         this.sidebar.classList.add('open');
         this.overlay.classList.add('visible');
-        document.body.style.overflow = 'hidden';
+    	document.body.classList.add('body-no-scroll');
     }
 
     closeSidebar() {
         this.sidebar.classList.remove('open');
         this.overlay.classList.remove('visible');
-        document.body.style.overflow = '';
+    	document.body.classList.remove('body-no-scroll');
     }
 
     handleLanguageChange(language) {

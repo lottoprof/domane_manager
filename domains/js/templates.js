@@ -1,4 +1,3 @@
-
 class TemplatesManager {
     constructor() {
         this.tableBody = document.getElementById('templatesTableBody');
@@ -49,45 +48,45 @@ class TemplatesManager {
         }
     }
 
-renderTemplates(templates) {
-    this.tableBody.innerHTML = templates.map(template => `
-        <tr>
-            <td>${template.template_id}</td>
-            <td>${this.brandMap[template.brand_id] || 'Unknown'}</td>
-            <td>${template.name}</td>
-            <td>${template.description || '-'}</td>
-            <td>${template.language}</td>
-            <td>${template.created_at || '-'}</td>
-            <td>${template.active ? 'Yes' : 'No'}</td>
-            <td>${this.getActionButtons(template.template_id)}</td>
-        </tr>
-    `).join('');
-}
+    renderTemplates(templates) {
+        this.tableBody.innerHTML = templates.map(template => `
+            <tr class="${template.active ? 'row-active' : 'row-inactive'}">
+                <td>${template.template_id}</td>
+                <td>${this.brandMap[template.brand_id] || 'Unknown'}</td>
+                <td>${template.name}</td>
+                <td>${template.description || '-'}</td>
+                <td>${template.language}</td>
+                <td>${template.created_at || '-'}</td>
+                <td>${template.active ? 'Yes' : 'No'}</td>
+                <td>${this.getActionButtons(template.template_id)}</td>
+            </tr>
+        `).join('');
+    }
 
     getActionButtons(templateId) {
         return `<button onclick="templatesManager.openEditTemplateModal(${templateId})" class="btn btn-primary">Edit</button>`;
     }
 
-async openEditTemplateModal(templateId) {
-    this.showModal(templateId); // Передаем ID, чтобы не очищать форму
+    async openEditTemplateModal(templateId) {
+        this.showModal(templateId); // Передаем ID, чтобы не очищать форму
 
-    try {
-        const response = await fetch(`/api/templates/${templateId}`, {
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
-        });
+        try {
+            const response = await fetch(`/api/templates/${templateId}`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+            });
 
-        if (response.ok) {
-            const template = await response.json();
-            this.brandSelect.value = template.brand_id;
-            document.getElementById("templateName").value = template.name;
-            document.getElementById("templateDescription").value = template.description || "";
-            document.getElementById("templateLanguage").value = template.language;
-            document.getElementById("templateActive").value = template.active ? "true" : "false";
+            if (response.ok) {
+                const template = await response.json();
+                this.brandSelect.value = template.brand_id;
+                document.getElementById("templateName").value = template.name;
+                document.getElementById("templateDescription").value = template.description || "";
+                document.getElementById("templateLanguage").value = template.language;
+                document.getElementById("templateActive").value = template.active ? "true" : "false";
+            }
+        } catch (error) {
+            console.error("Error fetching template details:", error);
         }
-    } catch (error) {
-        console.error("Error fetching template details:", error);
     }
-}
 
     async saveTemplate() {
         const templateId = this.modal.dataset.templateId;
@@ -153,28 +152,26 @@ async openEditTemplateModal(templateId) {
         });
     }
 
-showModal(templateId = "") {
-    if (!this.modal) {
-        console.error("Modal #templateModal not found");
-        return;
-    }
+    showModal(templateId = "") {
+        if (!this.modal) {
+            console.error("Modal #templateModal not found");
+            return;
+        }
 
-    if (!templateId) { // Если создание нового шаблона
-        this.brandSelect.value = "";
-        document.getElementById("templateName").value = "";
-        document.getElementById("templateDescription").value = "";
-        document.getElementById("templateLanguage").value = "";
-        document.getElementById("templateActive").value = "true";
-    }
+        if (!templateId) { // Если создание нового шаблона
+            this.brandSelect.value = "";
+            document.getElementById("templateName").value = "";
+            document.getElementById("templateDescription").value = "";
+            document.getElementById("templateLanguage").value = "";
+            document.getElementById("templateActive").value = "true";
+        }
 
-    this.modal.dataset.templateId = templateId;
-    this.modal.style.display = "flex";
-    this.modal.classList.add("show");
-}
+        this.modal.dataset.templateId = templateId;
+        this.modal.classList.add("show");
+    }
 
     closeModal() {
         if (this.modal) {
-            this.modal.style.display = "none";
             this.modal.classList.remove("show");
         }
     }

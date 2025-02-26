@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -18,24 +17,24 @@
 <body style="visibility: hidden">
   <div id="header-placeholder"></div>
   <main class="main-content">
-      <div class="container">
-          <div class="controls">
-              <button class="btn btn-primary" id="newSite">New Site</button>
-              <div class="table-controls">
-                  <div class="entries-control">
-                      Show <select id="entriesCount">
-                          <option>10</option>
-                          <option>25</option>
-                          <option>50</option>
-                          <option>100</option>
-                      </select> entries
-                  </div>
-                  <div class="search-control">
-                      <input type="text" id="searchInput" placeholder="Search...">
+      <div class="page-container">
+          <div class="table-container">
+              <h2>Сайты</h2>
+              <div class="controls">
+                  <div class="table-controls">
+                      <div class="entries-control">
+                          Show <select id="entriesCount">
+                              <option>10</option>
+                              <option>25</option>
+                              <option>50</option>
+                              <option>100</option>
+                          </select> entries
+                      </div>
+                      <div class="search-control">
+                          <input type="text" id="searchInput" placeholder="Search...">
+                      </div>
                   </div>
               </div>
-          </div>
-          <div class="table-container">
               <table class="data-table">
                   <thead>
                       <tr>
@@ -53,9 +52,50 @@
                   <tbody id="sitesTableBody">
                   </tbody>
               </table>
+              <button id="newSite" class="table-add-btn">+</button>
           </div>
       </div>
   </main>
+
+  <!-- Модальное окно для создания/редактирования сайта -->
+  <div id="siteModal" class="modal">
+      <div class="modal-content">
+          <h2 id="siteModalTitle">Новый сайт</h2>
+          <form id="siteForm">
+              <label>Brand:</label>
+              <select id="siteBrand" required>
+                  <!-- Бренды будут загружены динамически -->
+              </select>
+              
+              <label>Name:</label>
+              <input type="text" id="siteName" required>
+              
+              <label>Label:</label>
+              <input type="text" id="siteLabel">
+              
+              <label>Logo URL:</label>
+              <input type="url" id="siteLogo">
+              
+              <div class="form-actions">
+                  <button type="button" id="saveSiteBtn" class="btn btn-primary">Сохранить</button>
+                  <button type="button" onclick="sitesManager.closeModal()" class="btn">Отмена</button>
+              </div>
+          </form>
+      </div>
+  </div>
+
+  <!-- Модальное окно для удаления -->
+  <div id="deleteModal" class="modal">
+      <div class="modal-content">
+          <h2>Удалить сайт?</h2>
+          <p>Вы уверены, что хотите удалить этот сайт?</p>
+          <div class="form-actions">
+              <button id="confirmDelete" class="btn btn-danger">Да, удалить</button>
+              <button onclick="sitesManager.closeDeleteModal()" class="btn">Отмена</button>
+          </div>
+      </div>
+  </div>
+
   <script src="../js/header.js"></script>
   <script src="../js/sites.js"></script>
   <script>
@@ -76,3 +116,4 @@
   </script>
 </body>
 </html>
+

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -17,71 +18,49 @@
 <body style="visibility: hidden">
    <div id="header-placeholder"></div>
    <main class="main-content">
-       <div class="page-container">
-           <div class="table-container">
-               <h2>Домены</h2>
-               <div class="controls">
-                   <div class="table-controls">
-                       <div class="search-control">
-                           <input type="text" id="searchInput" placeholder="Search...">
-                       </div>
+       <div class="container">
+           <div class="controls">
+               <div class="table-controls">
+                   <div class="entries-control">
+                       Show <select id="entriesCount">
+                           <option>10</option>
+                           <option>25</option>
+                           <option>50</option>
+                           <option>100</option>
+                       </select> entries
+                   </div>
+                   <div class="search-control">
+                       <input type="text" id="searchInput" placeholder="Search...">
                    </div>
                </div>
+           </div>
+           <div class="table-container">
                <table class="data-table">
                    <thead>
                        <tr>
-                           <th rowspan="2">Expand</th>
-                           <th rowspan="2">Project</th>
-                           <th rowspan="2">WebSite (lang)</th>
-                           <th rowspan="2">Domain</th>
-                           <th rowspan="2">CDN status</th>
-                           <th rowspan="2">Google</th>
-                           <th rowspan="2">Yandex</th>
-                           <th colspan="5">Block Details</th>
-                       </tr>
-                       <tr>
-                           <th>CDN</th>
-                           <th>Provider</th>
-                           <th>WhoIs_NS</th>
-                           <th>Government</th>
+                           <th>ID</th>
+                           <th>Site ID</th>
+                           <th>URL</th>
+                           <th>Lang</th>
+                           <th>Server Status</th>
+                           <th>Search</th>
+                           <th>Spin</th>
+                           <th>GSA</th>
+                           <th>Ping</th>
+                           <th>Ban Date</th>
+                           <th>Positions</th>
+                           <th>Views</th>
+                           <th>Clicks</th>
+                           <th>Created</th>
                            <th>Actions</th>
                        </tr>
                    </thead>
                    <tbody id="domainsTableBody">
-                       <!-- Данные загружаются динамически -->
                    </tbody>
                </table>
-               <button id="addDomainBtn" class="table-add-btn">+</button>
            </div>
        </div>
    </main>
-
-   <!-- Модальное окно для добавления/редактирования домена -->
-   <div id="domainModal" class="modal">
-       <div class="modal-content">
-           <h2 id="domainModalTitle">Новый домен</h2>
-           <form id="domainForm">
-               <label>Project:</label>
-               <select id="domainProject" required>
-                   <!-- Проекты будут загружены динамически -->
-               </select>
-               
-               <label>Website:</label>
-               <select id="domainWebsite" required>
-                   <!-- Сайты будут загружены динамически -->
-               </select>
-               
-               <label>Domain:</label>
-               <input type="text" id="domainName" required>
-               
-               <div class="form-actions">
-                   <button type="button" id="saveDomainBtn" class="btn btn-primary">Сохранить</button>
-                   <button type="button" onclick="domainsManager.closeModal()" class="btn">Отмена</button>
-               </div>
-           </form>
-       </div>
-   </div>
-
    <script src="../js/header.js"></script>
    <script src="../js/domains.js"></script>
    <script>

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -18,11 +17,10 @@
     <div id="header-placeholder"></div>
 
     <main class="main-content">
-        <div class="container">
-            <h1>Project Management</h1>
-
+        <div class="page-container">
             <!-- Таблица проектов -->
             <div class="table-container">
+                <h2>Проекты</h2>
                 <table class="data-table">
                     <thead>
                         <tr>
@@ -43,12 +41,10 @@
                         <!-- Данные загружаются динамически -->
                     </tbody>
                 </table>
+                <button id="addBrandBtn" class="table-add-btn">+</button>
             </div>
         </div>
     </main>
-
-    <!-- Кнопка добавления проекта -->
-    <button id="addBrandBtn" class="add-btn">+</button>
 
     <!-- Модальное окно добавления/редактирования проекта -->
     <div id="brandModal" class="modal">
@@ -108,15 +104,6 @@
                 window.location.href = '../index.html';
             }
         });
-    </script>
-
-    <script>
-        function closeModal() {
-            document.getElementById("brandModal").style.display = "none";
-        }
-        function closeDeleteModal() {
-            document.getElementById("deleteModal").style.display = "none";
-        }
     </script>
 </body>
 </html>

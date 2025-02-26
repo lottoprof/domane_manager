@@ -1,10 +1,8 @@
-
 class BrandsManager {
     constructor() {
         this.tableBody = document.getElementById('brandsTableBody');
         this.userRole = null;
         this.modal = document.getElementById("brandModal");
-        this.cancelButton = document.getElementById("cancelBrandBtn");
         this.saveButton = document.getElementById("saveBrandBtn");
         this.init();
     }
@@ -17,7 +15,6 @@ class BrandsManager {
 
     closeModal() {
         if (this.modal) {
-            this.modal.style.display = "none";
             this.modal.classList.remove("show");
             this.modal.dataset.brandId = "";
         }
@@ -91,7 +88,7 @@ class BrandsManager {
 
     renderBrands(brands) {
         this.tableBody.innerHTML = brands.map(brand => `
-            <tr>
+            <tr class="${brand.active ? 'row-active' : 'row-inactive'}">
                 <td>${brand.id || brand.brand_id}</td>
                 <td>${brand.name}</td>
                 <td>${brand.description || '-'} </td>
@@ -121,7 +118,6 @@ class BrandsManager {
     }
 
     async openEditBrandModal(brandId) {
-        this.modal.style.display = "flex";
         this.modal.classList.add("show");
         this.modal.dataset.brandId = brandId;
         
@@ -146,58 +142,59 @@ class BrandsManager {
         }
     }
 
-async updateBrandStatus(brandId, status) {
-    try {
-        // Загружаем текущие данные бренда
-        const response = await fetch(`/api/brands/${brandId}`, {
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem("access_token")}`
+    async updateBrandStatus(brandId, status) {
+        try {
+            // Загружаем текущие данные бренда
+            const response = await fetch(`/api/brands/${brandId}`, {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`
+                }
+            });
+
+            if (!response.ok) {
+                console.error("Ошибка загрузки данных бренда:", await response.json());
+                return;
             }
-        });
 
-        if (!response.ok) {
-            console.error("Ошибка загрузки данных бренда:", await response.json());
-            return;
+            const brandData = await response.json();
+
+            // Обновляем поле active, сохраняя остальные данные
+            brandData.active = status === "true";
+
+            // Отправляем обновленные данные на сервер
+            const updateResponse = await fetch(`/api/brands/${brandId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`
+                },
+                body: JSON.stringify(brandData)
+            });
+
+            if (updateResponse.ok) {
+                this.loadBrands(); // Обновляем таблицу после успешного запроса
+            } else {
+                console.error("Ошибка обновления статуса бренда:", await updateResponse.json());
+            }
+        } catch (error) {
+            console.error("Ошибка при выполнении запроса:", error);
         }
-
-        const brandData = await response.json();
-
-        // Обновляем поле active, сохраняя остальные данные
-        brandData.active = status === "true";
-
-        // Отправляем обновленные данные на сервер
-        const updateResponse = await fetch(`/api/brands/${brandId}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("access_token")}`
-            },
-            body: JSON.stringify(brandData)
-        });
-
-        if (updateResponse.ok) {
-            this.loadBrands(); // Обновляем таблицу после успешного запроса
-        } else {
-            console.error("Ошибка обновления статуса бренда:", await updateResponse.json());
-        }
-    } catch (error) {
-        console.error("Ошибка при выполнении запроса:", error);
     }
-}
-
 
     setupEventListeners() {
         document.getElementById("addBrandBtn").addEventListener("click", () => {
-            this.modal.style.display = "flex";
+            // Очистка полей формы
+            document.getElementById("brandName").value = "";
+            document.getElementById("brandDescription").value = "";
+            document.getElementById("brandRsPercentage").value = "";
+            document.getElementById("brandRefLink").value = "";
+            document.getElementById("brandStartDate").value = "";
+            document.getElementById("brandEndDate").value = "";
+            document.getElementById("brandActive").value = "true";
+            
             this.modal.classList.add("show");
             this.modal.dataset.brandId = "";
         });
-
-        if (this.cancelButton) {
-            this.cancelButton.addEventListener("click", () => {
-                this.closeModal();
-            });
-        }
 
         if (this.saveButton) {
             this.saveButton.addEventListener("click", async () => {
@@ -220,3 +217,13 @@ async updateBrandStatus(brandId, status) {
 }
 
 const brandsManager = new BrandsManager();
+
+// Функции для управления модальными окнами из HTML
+function closeModal() {
+    document.getElementById("brandModal").classList.remove("show");
+}
+
+function closeDeleteModal() {
+    document.getElementById("deleteModal").classList.remove("show");
+}
+

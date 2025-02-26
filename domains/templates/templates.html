@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -18,11 +17,10 @@
     <div id="header-placeholder"></div>
 
     <main class="main-content">
-        <div class="container">
-            <h1>Templates Management</h1>
-
+        <div class="page-container">
             <!-- Таблица шаблонов -->
             <div class="table-container">
+                <h2>Шаблоны</h2>
                 <table class="data-table">
                     <thead>
                         <tr>
@@ -40,12 +38,10 @@
                         <!-- Данные загружаются динамически -->
                     </tbody>
                 </table>
+                <button id="addTemplateBtn" class="table-add-btn">+</button>
             </div>
         </div>
     </main>
-
-    <!-- Кнопка добавления шаблона -->
-    <button id="addTemplateBtn" class="add-btn">+</button>
 
     <!-- Модальное окно добавления/редактирования шаблона -->
     <div id="templateModal" class="modal">
@@ -71,7 +67,7 @@
             </select>
             
             <button id="saveTemplateBtn">Сохранить</button>
-            <button onclick="closeModal()">Отмена</button>
+            <button onclick="templatesManager.closeModal()">Отмена</button>
         </div>
     </div>
 
@@ -90,10 +86,6 @@
                 window.location.href = '../index.html';
             }
         });
-
-        function closeModal() {
-            document.getElementById("templateModal").style.display = "none";
-        }
     </script>
 </body>
 </html>

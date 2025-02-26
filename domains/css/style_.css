@@ -67,7 +67,7 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
-    margin-left: auto;
+    margin-left: auto; /* Отодвигает правую часть вправо */
 }
 
 .header-left {
@@ -84,6 +84,7 @@ body {
     cursor: pointer;
     transition: color 0.2s ease;
     padding: 8px;
+    /* Бургер теперь в левой части */
     order: -1;
 }
 
@@ -291,6 +292,21 @@ select:focus {
     background: #0056b3;
 }
 
+.logout-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.logout-btn:hover {
+    background-color: #0056b3;
+}
+
 /* ======= TABLE STYLES ======= */
 .table-container {
     background: white;
@@ -305,6 +321,15 @@ select:focus {
 }
 
 .table-container:not(:last-child) {
+    margin-bottom: 3rem;
+}
+
+.apk-table-container {
+    position: relative;
+    padding-bottom: 50px;
+}
+
+.apk-table-container:not(:last-child) {
     margin-bottom: 3rem;
 }
 
@@ -379,11 +404,13 @@ select:focus {
 }
 
 /* Интерактивность таблицы */
-.data-table tr.selectable {
+.data-table tr.selectable,
+.apk-data-table tr.selectable {
     cursor: pointer;
 }
 
-.data-table tr.selected {
+.data-table tr.selected,
+.apk-data-table tr.selected {
     background-color: #e2f0ff;
 }
 

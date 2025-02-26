@@ -1,4 +1,3 @@
-
 class UsersManager {
     constructor() {
         this.tableBody = document.getElementById('usersTableBody');
@@ -47,11 +46,11 @@ class UsersManager {
 
     renderUsers(users) {
         this.tableBody.innerHTML = users.map(user => `
-            <tr>
+            <tr class="${user.active ? 'row-active' : 'row-inactive'}">
                 <td>${user.id}</td>
                 <td>${user.username}</td>
                 <td>${user.email}</td>
-                <td>${user.role}</td>
+                <td class="${this.getRoleClass(user.role)}">${user.role}</td>
                 <td>${user.created_at || '-'}</td>
                 <td>${user.created_by || '-'}</td>
                 <td>${user.last_login || '-'}</td>
@@ -59,6 +58,14 @@ class UsersManager {
                 <td>${this.getActionButtons(user)}</td>
             </tr>
         `).join('');
+    }
+
+    getRoleClass(role) {
+        switch(role) {
+            case 'admin': return 'cell-danger';
+            case 'editor': return 'cell-warning';
+            default: return 'cell-info';
+        }
     }
 
     getActionButtons(user) {
@@ -139,10 +146,10 @@ class UsersManager {
             document.getElementById("saveUserBtn").setAttribute("data-user-id", user.id);
 
             // Настраиваем блок смены пароля
-            document.getElementById("changePasswordBlock").style.display = "block";
-            document.getElementById("newPassword").style.display = "none";
+            document.getElementById("changePasswordBlock").classList.remove("hidden");
+            document.getElementById("newPassword").classList.add("hidden");
             document.getElementById("changePasswordCheckbox").checked = false;
-            document.getElementById("userPassword").style.display = "none"; // Скрываем поле пароля при редактировании
+            document.getElementById("userPassword").classList.add("hidden"); // Скрываем поле пароля при редактировании
             document.getElementById("userPassword").required = false; // Делаем поле необязательным при редактировании
             
             openModal();
@@ -156,7 +163,7 @@ class UsersManager {
         document.getElementById("userEmail").value = "";
         document.getElementById("userUsername").value = "";
         document.getElementById("userPassword").value = "";
-        document.getElementById("userPassword").style.display = "block";
+        document.getElementById("userPassword").classList.remove("hidden");
         document.getElementById("userPassword").required = true;
         
         // Сбрасываем селектор ролей на первую опцию
@@ -170,26 +177,24 @@ class UsersManager {
         }
     }
 
-openDeleteModal(userId) {
-    const deleteModal = document.getElementById("deleteModal");
-    const confirmDeleteBtn = document.getElementById("confirmDelete");
-    
-    if (deleteModal && confirmDeleteBtn) {
-        confirmDeleteBtn.setAttribute("data-user-id", userId);
+    openDeleteModal(userId) {
+        const deleteModal = document.getElementById("deleteModal");
+        const confirmDeleteBtn = document.getElementById("confirmDelete");
         
-        // Применяем несколько стилей, чтобы гарантировать видимость
-        deleteModal.style.display = "flex";
-        deleteModal.style.visibility = "visible";
-        deleteModal.style.opacity = "0.4";
-        deleteModal.style.zIndex = "1000"; // Высокий z-index, чтобы быть поверх других элементов
-        
-        console.log("Delete modal opened for user ID:", userId);
-    } else {
-        console.error("Delete modal elements not found");
+        if (deleteModal && confirmDeleteBtn) {
+            confirmDeleteBtn.setAttribute("data-user-id", userId);
+            
+            // Используем классы вместо инлайн-стилей
+            deleteModal.classList.add("show");
+            
+            console.log("Delete modal opened for user ID:", userId);
+        } else {
+            console.error("Delete modal elements not found");
+        }
     }
-}
+
     closeDeleteModal() {
-        document.getElementById("deleteModal").style.display = "none";
+        document.getElementById("deleteModal").classList.remove("show");
     }
 
     setupEventListeners() {
@@ -199,7 +204,7 @@ openDeleteModal(userId) {
             
             document.getElementById("modalTitle").innerText = "Add User";
             document.getElementById("saveUserBtn").setAttribute("data-mode", "add");
-            document.getElementById("changePasswordBlock").style.display = "none";
+            document.getElementById("changePasswordBlock").classList.add("hidden");
             
             openModal();
         });
@@ -207,8 +212,13 @@ openDeleteModal(userId) {
         // Обработчик для чекбокса смены пароля
         document.getElementById("changePasswordCheckbox").addEventListener("change", function() {
             const newPasswordField = document.getElementById("newPassword");
-            newPasswordField.style.display = this.checked ? "block" : "none";
-            newPasswordField.required = this.checked;
+            if (this.checked) {
+                newPasswordField.classList.remove("hidden");
+                newPasswordField.required = true;
+            } else {
+                newPasswordField.classList.add("hidden");
+                newPasswordField.required = false;
+            }
         });
 
         document.getElementById("saveUserBtn").addEventListener("click", async () => {
@@ -295,18 +305,17 @@ const usersManager = new UsersManager();
 
 // Управление модальными окнами
 function openModal() {
-    document.getElementById("userModal").classList.add("show");
-    document.getElementById("userModal").style.visibility = "visible";
-    document.getElementById("userModal").style.opacity = "1";
+    const modal = document.getElementById("userModal");
+    modal.classList.add("show");
 }
 
 function closeModal() {
-    document.getElementById("userModal").classList.remove("show");
-    document.getElementById("userModal").style.visibility = "hidden";
-    document.getElementById("userModal").style.opacity = "0";
+    const modal = document.getElementById("userModal");
+    modal.classList.remove("show");
 }
 
 function closeDeleteModal() {
     const modal = document.getElementById("deleteModal");
-    modal.style.display = "none";
+    modal.classList.remove("show");
 }
+
