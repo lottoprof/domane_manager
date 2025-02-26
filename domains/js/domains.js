@@ -43,8 +43,7 @@ class DomainsManager {
                 yandex_index: 2000,
                 block_details: {
                     cdn: false, // ✅
-                    provider: false, // ✅
-
+                    provider: true, // ❌
                     whois_ns: false, // ✅
                     government: false // ✅
                 },
@@ -75,10 +74,65 @@ class DomainsManager {
                     redirect: "Configured",
                     expiration: "2026-03-15"
                 }
+            },
+            {
+                id: 4,
+                project: "Project 4",
+                website: "WebSite (DE)",
+                domain: "example.de",
+                cdn_status: "Active",
+                google_index: 280,
+                yandex_index: 950,
+                block_details: {
+                    cdn: false, // ✅
+                    provider: false, // ✅
+                    whois_ns: false, // ✅
+                    government: false // ✅
+                },
+                details: {
+                    domain: "example.de",
+                    provider: "Namecheap",
+                    redirect: "Configured",
+                    expiration: "2026-05-20"
+                }
             }
         ];
 
-        this.renderDomains(domainsData);
+        // Сортируем домены: сначала домены с блокировками, затем без блокировок
+        // Внутри каждой группы сортируем по алфавиту (по имени домена)
+        const sortedDomains = this.sortDomains(domainsData);
+        
+        this.renderDomains(sortedDomains);
+    }
+
+    // Метод для сортировки доменов
+    sortDomains(domains) {
+        return domains.sort((a, b) => {
+            // Проверяем, есть ли у домена блокировки
+            const aHasBlocks = a.block_details.cdn || 
+                               a.block_details.provider || 
+                               a.block_details.whois_ns || 
+                               a.block_details.government;
+            
+            const bHasBlocks = b.block_details.cdn || 
+                               b.block_details.provider || 
+                               b.block_details.whois_ns || 
+                               b.block_details.government;
+            
+            // Если у одного есть блокировки, а у другого нет
+            if (aHasBlocks && !bHasBlocks) {
+                return -1; // a идет перед b
+            }
+            
+            if (!aHasBlocks && bHasBlocks) {
+                return 1; // b идет перед a
+            }
+            
+            // Если оба домена имеют одинаковый статус блокировки,
+            // сортируем по алфавиту
+            return a.project.localeCompare(b.project);
+           // return a.domain.localeCompare(b.domain);
+        });
     }
 
     renderDomains(domains) {
@@ -88,8 +142,6 @@ class DomainsManager {
         
         domains.forEach((domain, index) => {
             // Определяем класс строки на основе статусов блокировки
-            // Если хотя бы один true (❌), то строка розовая (row-inactive / красноватая)
-            // Если все false (✅), то строка зеленая (row-active)
             const isAnyBlocked = domain.block_details.cdn || 
                                  domain.block_details.provider || 
                                  domain.block_details.whois_ns || 
