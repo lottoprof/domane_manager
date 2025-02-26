@@ -21,10 +21,10 @@ class DomainsManager {
                 google_index: 300,
                 yandex_index: 1000,
                 block_details: {
-                    cdn: false,
-                    provider: true,
-                    whois_ns: true,
-                    government: false
+                    cdn: true,  // ❌
+                    provider: false, // ✅
+                    whois_ns: false, // ✅
+                    government: true  // ❌
                 },
                 details: {
                     domain: "example.com",
@@ -42,10 +42,11 @@ class DomainsManager {
                 google_index: 150,
                 yandex_index: 2000,
                 block_details: {
-                    cdn: true,
-                    provider: false,
-                    whois_ns: true,
-                    government: true
+                    cdn: false, // ✅
+                    provider: false, // ✅
+
+                    whois_ns: false, // ✅
+                    government: false // ✅
                 },
                 details: {
                     domain: "example.ru",
@@ -63,10 +64,10 @@ class DomainsManager {
                 google_index: 250,
                 yandex_index: 800,
                 block_details: {
-                    cdn: false,
-                    provider: false,
-                    whois_ns: false,
-                    government: false
+                    cdn: true, // ❌
+                    provider: true, // ❌
+                    whois_ns: true, // ❌
+                    government: true // ❌
                 },
                 details: {
                     domain: "example.es",
@@ -150,8 +151,8 @@ class DomainsManager {
 
     getStatusIcon(status) {
         return status ? 
-            '<span class="status-icon cell-success">✅</span>' : 
-            '<span class="status-icon cell-danger">❌</span>';
+            '<span class="status-icon cell-danger">❌</span>' : 
+            '<span class="status-icon cell-success">✅</span>';
     }
 
     // Обработчики для кнопок
