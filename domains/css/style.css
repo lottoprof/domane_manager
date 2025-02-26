@@ -580,7 +580,55 @@ select:focus {
     margin-bottom: 2rem;
 }
 
-/* ======= DOMAIN STYLES ======= */
+/* ======= DOMAIN TABLE STYLES ======= */
+.data-table th[colspan="4"] {
+    text-align: center;
+}
+
+/* Стили для кнопок внутри таблицы */
+.data-table button {
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 3px 6px;
+    margin: 0 2px;
+    cursor: pointer;
+}
+
+.data-table button.sync-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    margin-left: 5px;
+}
+
+/* Стили для статусов блокировки */
+.block-status {
+    font-size: 18px;
+}
+
+/* Стили для вложенной таблицы */
+.nested-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.nested-table th,
+.nested-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.nested-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+/* Кнопки действий во вложенной таблице */
+.nested-table button {
+    margin-right: 5px;
+}
 
 .text-center {
     text-align: center;
