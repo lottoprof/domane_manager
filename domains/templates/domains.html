@@ -1,91 +1,80 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Domain Manager - Domains</title>
-   <link rel="stylesheet" href="../css/style.css">
-   <script src="../js/auth.js"></script>
-   <script src="../js/access.js"></script>
-   <script>
-       if (!localStorage.getItem('access_token')) {
-           window.location.href = '../index.html';
-       }
-   </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domains Management</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/auth.js"></script>
+    <script src="../js/access.js"></script>
+    <script>
+        if (!localStorage.getItem('access_token')) {
+            window.location.href = '../index.html';
+        }
+    </script>
 </head>
 <body style="visibility: hidden">
-   <div id="header-placeholder"></div>
-   <main class="main-content">
-       <div class="page-container">
-           <div class="table-container">
-               <h2>Домены</h2>
-               <table class="data-table">
-                   <thead>
-                       <tr>
-                           <th rowspan="2">Expand</th>
-                           <th rowspan="2">Project</th>
-                           <th rowspan="2">WebSite (lang)</th>
-                           <th rowspan="2">Domain</th>
-                           <th rowspan="2">CDN status</th>
-                           <th rowspan="2">Google</th>
-                           <th rowspan="2">Yandex</th>
-                           <th colspan="4">Block Details</th>
-                       </tr>
-                       <tr>
-                           <th>CDN</th>
-                           <th>Provider</th>
-                           <th>WhoIs_NS</th>
-                           <th>Government</th>
-                       </tr>
-                   </thead>
-                   <tbody id="domainsTableBody">
-                       <!-- Данные загружаются динамически -->
-                   </tbody>
-               </table>
-           </div>
-       </div>
-   </main>
+    <div id="header-placeholder"></div>
 
-   <!-- Модальное окно для подтверждения синхронизации -->
-   <div id="syncModal" class="modal">
-       <div class="modal-content">
-           <h2>Подтвердите синхронизацию</h2>
-           <p>Вы уверены, что хотите синхронизировать домен <span id="syncModalDomainName"></span>?</p>
-           <div class="form-actions">
-               <button type="button" id="confirmSyncBtn" class="btn btn-primary">Подтвердить</button>
-               <button type="button" id="cancelSyncBtn" class="btn">Отмена</button>
-           </div>
-       </div>
-   </div>
+    <main class="main-content">
+        <div class="page-container">
+            <div class="table-container">
+                <h2>Домены</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Expand</th>
+                            <th rowspan="2">Project</th>
+                            <th rowspan="2">WebSite (lang)</th>
+                            <th rowspan="2">Domain </th>
+                            <th rowspan="2">CDN status</th>
+                            <th rowspan="2">Google</th>
+                            <th rowspan="2">Yandex</th>
+                            <th colspan="4">Block Details</th>
+                        </tr>
+                        <tr>
+                            <th>CDN</th>
+                            <th>Provider</th>
+                            <th>WhoIs_NS</th>
+                            <th>Government</th>
+                        </tr>
+                    </thead>
+                    <tbody id="domainsTableBody">
+                        <!-- Данные будут загружены динамически через JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
 
-   <!-- Модальное окно для подтверждения редиректа -->
-   <div id="redirectModal" class="modal">
-       <div class="modal-content">
-           <h2 id="redirectModalTitle">Подтвердите действие</h2>
-           <p>Вы уверены, что хотите выполнить это действие для домена <span id="redirectModalDomainName"></span>?</p>
-           <div class="form-actions">
-               <button type="button" id="confirmRedirectBtn" class="btn btn-primary">Подтвердить</button>
-               <button type="button" id="cancelRedirectBtn" class="btn">Отмена</button>
-           </div>
-       </div>
-   </div>
+    <!-- Модальное окно подтверждения -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h2 id="confirmTitle">Подтверждение</h2>
+            <p id="confirmMessage">Вы уверены?</p>
+            <div>
+                <button id="confirmYes" class="sync-btn">Да</button>
+                <button id="confirmNo" class="action-btn">Нет</button>
+            </div>
+        </div>
+    </div>
 
-   <script src="../js/header.js"></script>
-   <script src="../js/domains.js"></script>
-   <script>
-       document.addEventListener('DOMContentLoaded', async () => {
-           try {
-               const isAuth = await Auth.checkAuth();
-               if (!isAuth) {
-                   window.location.href = '../index.html';
-                   return;
-               }
-               document.body.style.visibility = 'visible';
-           } catch {
-               window.location.href = '../index.html';
-           }
-       });
-   </script>
+    <script src="../js/header.js"></script>
+    <script src="../js/domains.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const isAuth = await Auth.checkAuth();
+                if (!isAuth) {
+                    window.location.href = '../index.html';
+                    return;
+                }
+                document.body.style.visibility = 'visible';
+            } catch {
+                window.location.href = '../index.html';
+            }
+        });
+    </script>
 </body>
 </html>
 
