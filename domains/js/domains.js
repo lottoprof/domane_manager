@@ -157,67 +157,88 @@ class DomainsManager {
 
     // Модальное окно подтверждения
     showConfirmModal(title, message, onConfirm) {
-        // Создаем модальное окно, если его еще нет
-        let modal = document.getElementById('confirmModal');
-        if (!modal) {
-            modal = document.createElement('div');
-            modal.id = 'confirmModal';
-            modal.className = 'modal';
-            
-            const modalContent = document.createElement('div');
-            modalContent.className = 'modal-content';
-            
-            modalContent.innerHTML = `
-                <h2 id="confirmTitle"></h2>
-                <p id="confirmMessage"></p>
-                <div>
-                    <button id="confirmYes" class="btn-primary">Да</button>
-                    <button id="confirmNo">Нет</button>
-                </div>
-            `;
-            
-            modal.appendChild(modalContent);
-            document.body.appendChild(modal);
-            
-            // Обработчик клика по кнопке "Нет" и закрытия модального окна
-            document.getElementById('confirmNo').addEventListener('click', () => {
-                modal.classList.remove('show');
-            });
-            
-            // Закрытие по клику вне модального окна
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.remove('show');
-                }
-            });
-            
-            // Закрытие по клавише Esc
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && modal.classList.contains('show')) {
-                    modal.classList.remove('show');
-                }
-            });
+        // Получаем ссылку на модальное окно
+        const modal = document.getElementById('confirmModal');
+        const confirmTitle = document.getElementById('confirmTitle');
+        const confirmMessage = document.getElementById('confirmMessage');
+        const confirmYes = document.getElementById('confirmYes');
+        const confirmNo = document.getElementById('confirmNo');
+        
+        if (!modal || !confirmTitle || !confirmMessage || !confirmYes || !confirmNo) {
+            console.error('Modal elements not found');
+            return;
         }
         
         // Установка заголовка и сообщения
-        document.getElementById('confirmTitle').textContent = title;
-        document.getElementById('confirmMessage').textContent = message;
+        confirmTitle.textContent = title;
+        confirmMessage.textContent = message;
         
         // Установка обработчика для кнопки "Да"
-        const confirmYesBtn = document.getElementById('confirmYes');
-        confirmYesBtn.onclick = () => {
+        const yesClickHandler = () => {
             if (typeof onConfirm === 'function') {
                 onConfirm();
             }
-            modal.classList.remove('show');
+            this.closeModal(modal);
+            // Удаляем обработчики событий после закрытия
+            confirmYes.removeEventListener('click', yesClickHandler);
+            confirmNo.removeEventListener('click', noClickHandler);
+            document.removeEventListener('keydown', escKeyHandler);
+            modal.removeEventListener('click', outsideClickHandler);
         };
+        
+        // Установка обработчика для кнопки "Нет"
+        const noClickHandler = () => {
+            this.closeModal(modal);
+            // Удаляем обработчики событий после закрытия
+            confirmYes.removeEventListener('click', yesClickHandler);
+            confirmNo.removeEventListener('click', noClickHandler);
+            document.removeEventListener('keydown', escKeyHandler);
+            modal.removeEventListener('click', outsideClickHandler);
+        };
+        
+        // Обработчик для клавиши ESC
+        const escKeyHandler = (event) => {
+            if (event.key === 'Escape') {
+                this.closeModal(modal);
+                // Удаляем обработчики событий после закрытия
+                confirmYes.removeEventListener('click', yesClickHandler);
+                confirmNo.removeEventListener('click', noClickHandler);
+                document.removeEventListener('keydown', escKeyHandler);
+                modal.removeEventListener('click', outsideClickHandler);
+            }
+        };
+        
+        // Обработчик для клика вне модального окна
+        const outsideClickHandler = (event) => {
+            if (event.target === modal) {
+                this.closeModal(modal);
+                // Удаляем обработчики событий после закрытия
+                confirmYes.removeEventListener('click', yesClickHandler);
+                confirmNo.removeEventListener('click', noClickHandler);
+                document.removeEventListener('keydown', escKeyHandler);
+                modal.removeEventListener('click', outsideClickHandler);
+            }
+        };
+        
+        // Привязываем обработчики событий
+        confirmYes.addEventListener('click', yesClickHandler);
+        confirmNo.addEventListener('click', noClickHandler);
+        document.addEventListener('keydown', escKeyHandler);
+        modal.addEventListener('click', outsideClickHandler);
         
         // Отображение модального окна
         modal.classList.add('show');
     }
+    
+    // Метод для закрытия модального окна
+    closeModal(modal) {
+        if (modal) {
+            modal.classList.remove('show');
+        }
+    }
 
     setupEventListeners() {
-        // Общие обработчики событий, если необходимо
+        // Инициализация базовых обработчиков событий
         console.log('Event listeners set up');
     }
 }
