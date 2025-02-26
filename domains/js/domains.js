@@ -53,6 +53,27 @@ class DomainsManager {
                     redirect: "Not Configured",
                     expiration: "2024-06-15"
                 }
+            },
+            {
+                id: 3,
+                project: "Project 3",
+                website: "WebSite (ES)",
+                domain: "example.es",
+                cdn_status: "Active",
+                google_index: 250,
+                yandex_index: 800,
+                block_details: {
+                    cdn: false,
+                    provider: false,
+                    whois_ns: false,
+                    government: false
+                },
+                details: {
+                    domain: "example.es",
+                    provider: "Namecheap",
+                    redirect: "Configured",
+                    expiration: "2026-03-15"
+                }
             }
         ];
 
@@ -65,8 +86,15 @@ class DomainsManager {
         this.tableBody.innerHTML = '';
         
         domains.forEach((domain, index) => {
-            // Определяем класс строки на основе статуса CDN
-            const rowClass = domain.cdn_status === 'Active' ? 'row-active' : 'row-inactive';
+            // Определяем класс строки на основе статусов блокировки
+            // Если хотя бы один true (❌), то строка розовая (row-inactive / красноватая)
+            // Если все false (✅), то строка зеленая (row-active)
+            const isAnyBlocked = domain.block_details.cdn || 
+                                 domain.block_details.provider || 
+                                 domain.block_details.whois_ns || 
+                                 domain.block_details.government;
+            
+            const rowClass = isAnyBlocked ? 'row-inactive' : 'row-active';
             
             // Основная строка с данными домена
             const mainRow = document.createElement('tr');
