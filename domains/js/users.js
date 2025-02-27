@@ -140,7 +140,32 @@ class UsersManager {
             } catch (error) {
                 console.error("Error setting user role:", error);
             }
+
+            try {
+                const statusOptions = document.querySelectorAll('#userStatus option');
             
+                // Снимаем выделение со всех опций
+                statusOptions.forEach(option => {
+                    option.selected = false;
+                });
+            
+                // Находим опцию с нужным data-active и выбираем её
+                let statusFound = false;
+                statusOptions.forEach(option => {
+                    if (option.dataset.active === user.active.toString()) {
+                        option.selected = true;
+                        statusFound = true;
+                        console.log(`Found and selected option with data-active="${user.active}"`);
+                    }
+                });
+        
+                if (!statusFound) {
+                    console.warn(`Option with data-active="${user.active}" not found`);
+                }
+            } catch (error) {
+                console.error("Error setting user status:", error);
+            }
+
             // Устанавливаем атрибуты для кнопки сохранения
             document.getElementById("saveUserBtn").setAttribute("data-mode", "edit");
             document.getElementById("saveUserBtn").setAttribute("data-user-id", user.id);
@@ -245,7 +270,8 @@ class UsersManager {
             const userData = {
                 email,
                 username,
-                role
+                role,
+                active
             };
 
             if (mode === "add") {
