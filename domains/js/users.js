@@ -251,6 +251,17 @@ class UsersManager {
             const username = document.getElementById("userUsername").value;
             const password = document.getElementById("userPassword").value;
             
+            // Получаем статус пользователя (active)
+            let active = "false"; // Значение по умолчанию
+                try {
+                    const selectedStatus = document.querySelector('#userStatus option:checked');
+                    if (selectedStatus) {
+                        active = selectedStatus.dataset.active;
+                    }
+                } catch (error) {
+                    console.error("Ошибка получения статуса пользователя:", error);
+                }
+
             // Получение выбранной роли
             let role = "user"; // Значение по умолчанию
             try {
