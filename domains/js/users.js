@@ -141,15 +141,13 @@ class UsersManager {
                 console.error("Error setting user role:", error);
             }
 
-            try {
+            if (user.active !== null && user.active !== undefined) {
                 const statusOptions = document.querySelectorAll('#userStatus option');
             
-                // Снимаем выделение со всех опций
                 statusOptions.forEach(option => {
                     option.selected = false;
                 });
             
-                // Находим опцию с нужным data-active и выбираем её
                 let statusFound = false;
                 statusOptions.forEach(option => {
                     if (option.dataset.active === user.active.toString()) {
@@ -158,12 +156,12 @@ class UsersManager {
                         console.log(`Found and selected option with data-active="${user.active}"`);
                     }
                 });
-        
+            
                 if (!statusFound) {
                     console.warn(`Option with data-active="${user.active}" not found`);
                 }
-            } catch (error) {
-                console.error("Error setting user status:", error);
+            } else {
+                console.warn("User active status is null or undefined, skipping selection.");
             }
 
             // Устанавливаем атрибуты для кнопки сохранения
