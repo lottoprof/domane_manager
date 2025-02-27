@@ -561,6 +561,26 @@ select:focus {
     border: 1px solid #e5e7eb;
 }
 
+/* ======= PAGE USERS STYLES ======= */
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Расстояние между чекбоксом и текстом */
+}
+
+.form-check-input {
+    appearance: none; /* Убираем стандартный чекбокс */
+    width: 0;
+    height: 0;
+    margin: 0;
+    visibility: hidden; /* Делаем его полностью невидимым */
+}
+
+.form-check-label {
+    font-weight: 500;
+    cursor: pointer;
+}
+
 /* ======= PAGE CONTAINER STYLES ======= */
 .brands-container,
 .sites-container,
