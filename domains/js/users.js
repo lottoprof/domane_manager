@@ -256,7 +256,7 @@ class UsersManager {
                 try {
                     const selectedStatus = document.querySelector('#userStatus option:checked');
                     if (selectedStatus) {
-                        active = selectedStatus.dataset.active;
+                        active = selectedStatus.dataset.active === "true";
                     }
                 } catch (error) {
                     console.error("Ошибка получения статуса пользователя:", error);
