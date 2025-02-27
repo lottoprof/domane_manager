@@ -114,6 +114,7 @@ CREATE TABLE cdn_accounts (
    api_url TEXT NOT NULL,
    api_key TEXT NOT NULL,
    email VARCHAR(255),
+   ext_id VARCHAR(255),
    active BOOLEAN DEFAULT true,
    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -125,6 +126,7 @@ COMMENT ON COLUMN cdn_accounts.provider_name IS 'Название провайд
 COMMENT ON COLUMN cdn_accounts.api_url IS 'URL API провайдера';
 COMMENT ON COLUMN cdn_accounts.api_key IS 'Ключ доступа к API';
 COMMENT ON COLUMN cdn_accounts.email IS 'Email для идентификации аккаунта';
+COMMENT ON COLUMN cdn_accounts.ext_id IS 'Идентификатор аккаунта в системе CDN';
 COMMENT ON COLUMN cdn_accounts.active IS 'Флаг активности аккаунта';
 COMMENT ON COLUMN cdn_accounts.created_at IS 'Дата и время создания записи';
 
