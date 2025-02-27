@@ -608,7 +608,6 @@ select:focus {
 
 /* Стили для кнопок внутри таблицы */
 .data-table button {
-    background: #f0f0f0;
     border: 1px solid #ccc;
     border-radius: 4px;
     padding: 3px 6px;
