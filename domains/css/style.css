@@ -576,8 +576,9 @@ select:focus {
 }
 
 .form-check-label {
-    font-weight: 500;
     cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: red;
 }
 
 /* ======= PAGE CONTAINER STYLES ======= */
