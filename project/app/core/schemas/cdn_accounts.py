@@ -11,6 +11,7 @@ class CdnAccountsSchemaBase(BaseModel):
     api_url: str
     api_key: str
     email: Optional[str] = None
+    ext_id: Optional[str] = None
     active: Optional[bool] = None
     created_at: Optional[datetime] = None
 

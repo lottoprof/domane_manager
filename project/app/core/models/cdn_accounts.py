@@ -13,6 +13,8 @@ class CdnAccounts(Base):
     api_url = Column(Text, nullable=False)
     api_key = Column(Text, nullable=False)
     email = Column(String(255))
+    ext_id = Column(String(255), nullable=True) 
     active = Column(Boolean)
     created_at = Column(DateTime)
+
 
