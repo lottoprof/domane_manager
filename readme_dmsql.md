@@ -1,3 +1,4 @@
+```mermaid
 erDiagram
     users ||--o{ settings : "creates"
     users ||--o{ brands : "creates"
@@ -14,7 +15,7 @@ erDiagram
     domains ||--o{ domain_checks : "monitored_in"
     keywords ||--o{ domain_checks : "used_in"
     domain_checks ||--o{ domain_checks_proxy : "proxied_by"
-
+```
     users {
         id SERIAL PK
         username TEXT
